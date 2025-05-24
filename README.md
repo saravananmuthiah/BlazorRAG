@@ -28,7 +28,7 @@ BlazorRAG is a .NET Blazor Server App that enables users to:
 - `.github/copilot-instructions.md` - Copilot custom instructions
 
 ## Requirements
-- .NET 9 SDK (latest recommended)
+- .NET 8.0+ SDK (latest recommended)
 - Python 3.8+ (for FAISS API)
 - OpenAI API key
 
