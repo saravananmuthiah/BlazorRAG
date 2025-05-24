@@ -1,7 +1,7 @@
 # BlazorRAG
 
 BlazorRAG is a .NET Blazor Server App that enables users to:
-- Upload CSV files containing textual content (FAQs, docs, notes, etc.)
+- Upload documents (CSV, PDF, Word) containing textual content (FAQs, docs, notes, etc.)
 - Use OpenAI embeddings (text-embedding-3-small) to convert content into vector embeddings
 - Store embeddings in a FAISS vector database via a Python API (HTTP)
 - Query the knowledge base with natural language and get answers from OpenAI GPT-4

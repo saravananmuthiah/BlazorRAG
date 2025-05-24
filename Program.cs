@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<QueryCacheService>();
-builder.Services.AddSingleton<CsvProcessingService>();
+builder.Services.AddSingleton<DocumentTextExtractionService>();
 builder.Services.AddHttpClient<FaissApiService>();
 builder.Services.AddHttpClient<OpenAIService>();
 
