@@ -1,0 +1,57 @@
+@page "/query"
+@using BlazorRAG.Services
+@inject OpenAIService OpenAI
+@inject FaissApiService Faiss
+@inject QueryCacheService Cache
+
+<h3>Ask a Question</h3>
+<div class="mb-3">
+    <input class="form-control" @bind="UserQuery" placeholder="Enter your question..." />
+</div>
+<button class="btn btn-primary" @onclick="OnQuery">Submit</button>
+
+@if (Answer != null)
+{
+    <div class="alert alert-success mt-3">
+        <b>Answer:</b> @Answer
+    </div>
+}
+@if (Error != null)
+{
+    <div class="alert alert-danger mt-3">@Error</div>
+}
+
+@code {
+    private string? UserQuery;
+    private string? Answer;
+    private string? Error;
+    private bool IsLoading;
+    private const int MaxContextTokens = 2000; // adjust as needed
+
+    private async Task OnQuery()
+    {
+        if (string.IsNullOrWhiteSpace(UserQuery)) return;
+        Error = null;
+        Answer = null;
+        IsLoading = true;
+        if (Cache.TryGet(UserQuery!, out var cached))
+        {
+            Answer = cached;
+            IsLoading = false;
+            return;
+        }
+        try
+        {
+            var queryEmbedding = await OpenAI.GetEmbeddingAsync(UserQuery!);
+            var chunks = await Faiss.QueryAsync(queryEmbedding, 5);
+            var trimmedChunks = BlazorRAG.Services.TokenUtils.TrimToTokenLimit(chunks, MaxContextTokens);
+            Answer = await OpenAI.GetAnswerAsync(UserQuery!, trimmedChunks);
+            Cache.Set(UserQuery!, Answer);
+        }
+        catch (Exception ex)
+        {
+            Error = ex.Message;
+        }
+        IsLoading = false;
+    }
+}

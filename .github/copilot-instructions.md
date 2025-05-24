@@ -1,0 +1,3 @@
+<!-- Use this file to provide workspace-specific custom instructions to Copilot. For more details, visit https://code.visualstudio.com/docs/copilot/copilot-customization#_use-a-githubcopilotinstructionsmd-file -->
+
+This is a .NET Blazor Server App project (BlazorRAG) that integrates with OpenAI and a Python FAISS API for RAG workflows. Prioritize backend processing for embeddings, use HttpClient for API calls, and follow best practices for DI and Razor components. UI should use Bootstrap or Blazorise. No client-side embeddings. Bonus: implement caching, file/embedding management, and token counting/trimming.

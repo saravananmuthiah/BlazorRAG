@@ -1,0 +1,34 @@
+@page "/upload"
+@using BlazorRAG.Services
+@inject CsvProcessingService CsvService
+@inject OpenAIService OpenAI
+@inject FaissApiService Faiss
+
+<h3>Upload CSV</h3>
+<div class="mb-3">
+    <InputFile OnChange="OnFileChange" accept=".csv" />
+</div>
+@if (Status != null)
+{
+    <div class="alert alert-info">@Status</div>
+}
+
+@code {
+    private string? Status;
+    private async Task OnFileChange(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file == null) return;
+        Status = "Processing...";
+        var stream = file.OpenReadStream();
+        var chunks = await CsvService.ExtractTextChunksAsync(stream);
+        var embeddings = new List<float[]>();
+        foreach (var chunk in chunks)
+        {
+            var emb = await OpenAI.GetEmbeddingAsync(chunk);
+            embeddings.Add(emb);
+        }
+        await Faiss.UploadEmbeddingsAsync(file.Name, embeddings, chunks);
+        Status = $"Uploaded and embedded {chunks.Count} rows.";
+    }
+}
